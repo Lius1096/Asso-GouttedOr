@@ -1,0 +1,73 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../services/api'; // Assurez-vous d'importer correctement l'instance axios
+
+const AdminLogin = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await api.post('/auth/admin-login', { email, password });
+      if (response.data.token) {
+        // Enregistrer le token dans localStorage ou dans un store (Redux par exemple)
+        localStorage.setItem('token', response.data.token);
+        // Rediriger vers le tableau de bord admin
+        navigate('/admin/dashboard');
+      }
+    } catch (err) {
+      setError('Email ou mot de passe incorrect.');
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-center h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-md w-96">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Connexion Admin</h2>
+
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+
+        <form onSubmit={handleLogin}>
+          <div className="mb-4">
+            <label htmlFor="email" className="block text-gray-600">Email</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full p-3 mt-2 border border-gray-300 rounded-md"
+              placeholder="Entrez votre email"
+              required
+            />
+          </div>
+
+          <div className="mb-4">
+            <label htmlFor="password" className="block text-gray-600">Mot de passe</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-3 mt-2 border border-gray-300 rounded-md"
+              placeholder="Entrez votre mot de passe"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-3 bg-blue-600 text-white rounded-lg mt-4 hover:bg-blue-700"
+          >
+            Se connecter
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default AdminLogin;
