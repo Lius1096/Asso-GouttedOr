@@ -1,7 +1,6 @@
 // src/components/AdminDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import AdminSidebar from './AdminSidebar';
-import AdminHeader from './AdminHeader';
 import ProfileManager from './ProfileManager';
 import axios from 'axios';
 import ManageArticle from './ManageArticles';
@@ -84,7 +83,6 @@ const AdminDashboard = () => {
       
       {/* Contenu principal */}
       <div className="flex-1 flex flex-col p-6">
-        <AdminHeader user={user} />
         <div className="mb-6">
           <h2 className="text-3xl font-bold text-gray-800">Tableau de bord</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
