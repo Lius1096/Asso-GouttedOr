@@ -6,17 +6,27 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#1D4ED8',
-        secondary: '#10B981',
-        accent: '#F59E0B',
-        background: '#F3F4F6',
-        text: '#111827',
+        primary: '#0F172A', // Dark navy
+        secondary: '#7C3AED', // Violet
+        accent: '#06B6D4', // Cyan
+        background: '#F8FAFC',
+        text: '#E2E8F0',
+        gradientStart: '#0F172A',
+        gradientMid: '#3B82F6',
+        gradientEnd: '#06B6D4',
+      },
+      backgroundImage: {
+        'gradient-hero': 'linear-gradient(to right, #0F172A, #3B82F6, #06B6D4)',
+        'gradient-overlay': 'linear-gradient(to top, rgba(15,23,42,0.9), rgba(15,23,42,0.4))',
       },
       animation: {
-        droplet: 'dropletEffect 6s infinite ease-in-out',
-        mucus: 'mucusShape 8s infinite ease-in-out', // Ajout de l'animation mucus
-        fadeIn: 'fadeIn 0.5s ease forwards',
-      },
+  droplet: 'dropletEffect 6s infinite ease-in-out',
+  mucus: 'mucusShape 8s infinite ease-in-out',
+  fadeIn: 'fadeIn 0.5s ease forwards',
+  typing: 'typing 3s steps(30, end) forwards, blink 0.75s step-end infinite',
+  slideUp: 'slideUp 0.7s ease-out forwards',
+},
+
       keyframes: {
         dropletEffect: {
           '0%, 100%': { transform: 'scale(1)', opacity: '1' },
@@ -38,10 +48,26 @@ module.exports = {
             transform: 'scale(1)',
           },
         },
-        
-        
+        fadeIn: {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 },
+        },
+        typing: {
+          '0%': { width: '0' },
+          '100%': { width: '100%' },
+        },
+        blink: {
+          '0%, 100%': { borderColor: 'transparent' },
+          '50%': { borderColor: '#06B6D4' }, // cyan for dev style
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(20px)', opacity: 0 },
+          '100%': { transform: 'translateY(0)', opacity: 1 },
+        },
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 };

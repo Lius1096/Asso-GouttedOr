@@ -3,7 +3,7 @@ import api from './api';
 const authService = {
   login: async (credentials) => {
     try {
-      const response = await api.post('/api/auth/admin/login', credentials);
+      const response = await api.post('/api/auth/login/admin', credentials);
       const token = response.data.token;
       if (token) {
         localStorage.setItem('token', token);
@@ -17,7 +17,7 @@ const authService = {
 
   register: async (credentials) => {
     try {
-      const response = await api.post('/api/auth/admin/register', credentials);
+      const response = await api.post('/api/auth/register/admin', credentials);
       const token = response.data.token;
       if (token) {
         localStorage.setItem('token', token);

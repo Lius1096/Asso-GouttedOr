@@ -1,28 +1,43 @@
 import { useState } from "react";
+import { sendContactMessage } from "../services/apiContact";
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
     name: "",
+    subject: "",
     email: "",
     message: "",
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Formulaire envoyé :", formData);
-    setSubmitted(true);
+    setSubmitted(false);
+    setError("");
+    setLoading(true);
 
-    // Réinitialiser le formulaire après envoi
-    setFormData({ name: "", email: "", message: "" });
-
-    // Tu peux ici ajouter l'envoi à un backend ou une API
+    try {
+      console.log("Envoi du formulaire :", formData);
+      const res = await sendContactMessage(formData);
+      console.log("Réponse du serveur :", res);
+      setSubmitted(true);
+      // Réinitialiser le formulaire après envoi
+      setFormData({ name: "", subject: "", email: "", message: "" });
+    } catch (err) {
+      console.error("Erreur lors de l’envoi :", err);
+      setError("Une erreur est survenue lors de l’envoi du message.");
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   return (
     <section className="container mx-auto py-10 px-6 max-w-lg">
@@ -31,6 +46,12 @@ const ContactForm = () => {
         <p className="text-green-600 text-center mb-4">
           Votre message a été envoyé avec succès !
         </p>
+
+      )}
+
+
+      {error && (
+        <p className="text-red-600 text-center mb-4">{error}</p>
       )}
       <form
         onSubmit={handleSubmit}
@@ -42,6 +63,17 @@ const ContactForm = () => {
             type="text"
             name="name"
             value={formData.name}
+            onChange={handleChange}
+            required
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 font-bold mb-2">objet</label>
+          <input
+            type="text"
+            name="subject"
+            value={formData.subject}
             onChange={handleChange}
             required
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -74,7 +106,9 @@ const ContactForm = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
+          disabled={loading}
+          className={`w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition ${loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
         >
           Envoyer
         </button>
