@@ -1,9 +1,9 @@
-// src/components/AdminDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import AdminSidebar from './AdminSidebar';
 import ProfileManager from './ProfileManager';
 import axios from 'axios';
 import ManageArticle from './ManageArticles';
+import AdminManageProjects from './AdminManageProjects'; // Ajoute cette ligne en haut de ton fichier
 
 // Composants d'exemple pour d'autres sections
 const Overview = () => (
@@ -34,19 +34,21 @@ const AdminDashboard = () => {
     email: 'admin@example.com',
     profilePicture: '/default-avatar.png'
   });
-  const [stats, setStats] = useState({ totalUsers: 0, totalArticles: 0 });
+  const [stats, setStats] = useState({ totalUsers: 0, totalArticles: 0, totalProjects: 0 });
 
   // Exemple de récupération des statistiques dynamiques
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [userRes, articleRes] = await Promise.all([
+        const [userRes, articleRes, projectRes] = await Promise.all([
           axios.get('/api/users'),     // Endpoint pour récupérer la liste des utilisateurs
-          axios.get('/api/articles')   // Endpoint pour récupérer la liste des articles
+          axios.get('/api/articles'),  // Endpoint pour récupérer la liste des articles
+          axios.get('/api/projects')   // Endpoint pour récupérer la liste des projets
         ]);
         setStats({
           totalUsers: userRes.data.length,
           totalArticles: articleRes.data.length,
+          totalProjects: projectRes.data.length,  // Récupérer le nombre total de projets
         });
       } catch (error) {
         console.error("Erreur lors de la récupération des statistiques", error);
@@ -71,6 +73,8 @@ const AdminDashboard = () => {
         return <UserManagement />;
       case 'articles':
         return <ManageArticle />;
+      case 'projects':
+        return <AdminManageProjects />;
       default:
         return <Overview />;
     }
@@ -80,7 +84,7 @@ const AdminDashboard = () => {
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
       <AdminSidebar onPageChange={handlePageChange} />
-      
+
       {/* Contenu principal */}
       <div className="flex-1 flex flex-col p-6">
         <div className="mb-6">
@@ -97,9 +101,9 @@ const AdminDashboard = () => {
               <p className="text-sm text-gray-500">Utilisateurs inscrits</p>
             </div>
             <div className="bg-yellow-50 p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold text-gray-700">Autres Statistiques</h3>
-              <p className="text-3xl font-bold text-gray-900">—</p>
-              <p className="text-sm text-gray-500">À définir</p>
+              <h3 className="text-xl font-semibold text-gray-700">Projets</h3>
+              <p className="text-3xl font-bold text-gray-900">{stats.totalProjects}</p>
+              <p className="text-sm text-gray-500">Total de projets</p>
             </div>
           </div>
         </div>

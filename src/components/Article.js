@@ -28,6 +28,10 @@ const ArticlesList = () => {
   return (
     <div className="container mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Nos Articles</h1>
+      <p className="text-gray-600 mb-10">
+          Explore mes articles pour apprendre, comprendre ou approfondir certains sujets techniques.
+        </p>
+
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {articles.map((article) => (
           <ArticleCard key={article._id} article={article} />

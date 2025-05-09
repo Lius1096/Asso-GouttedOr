@@ -1,168 +1,100 @@
-import React, { useState } from 'react';
-import logo from '../asset/logok.jpeg'; // Assurez-vous que le chemin est correct
-import SearchBar from "./SearchBar"; // Importation de la barre de recherche
+import React, { useState, useEffect } from 'react';
+import logo from '../asset/logok.jpeg';
 
 const Home = () => {
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [showTopButton, setShowTopButton] = useState(false);
 
-  const [activeMenu, setActiveMenu] = useState(null); // État pour contrôler quel sous-menu est actif
-  const [activeSubMenu, setActiveSubMenu] = useState(null); // État pour contrôler quel sous-sous-menu est actif
+  const [isOpen, setIsOpen] = useState(false); // Pour le menu "Mon compte"
 
-  const toggleMenu = (menu) => {
-    setActiveMenu(activeMenu === menu ? null : menu);
-  };
+  // Scroll detection pour bouton "retour en haut"
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
 
-  const toggleSubMenu = (subMenu) => {
-    setActiveSubMenu(activeSubMenu === subMenu ? null : subMenu);
-  };
+      // Cacher/montrer le header
+      if (scrollTop > lastScrollTop) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+      setLastScrollTop(scrollTop <= 0 ? 0 : scrollTop);
 
-  // Fonction pour retourner en haut de la page
+      // Montrer le bouton retour haut
+      setShowTopButton(scrollTop > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollTop]);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleLogout = () => {
+    // Implémente ta logique de déconnexion ici
+    console.log('Utilisateur déconnecté');
+    // Par exemple, remove token + rediriger :
+    // localStorage.removeItem('token');
+    // window.location.href = '/';
+  };
+
   return (
     <>
-      <header className={`bg-primary text-white py-4 shadow-lg sticky top-0 z-50 transition-transform duration-300 ${isVisible ? 'transform translate-y-0' : 'transform -translate-y-full'}`}>
+      <header className={`bg-primary text-white py-4 shadow-lg sticky top-0 z-50 transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="container mx-auto flex justify-between items-center">
-          <div className="bg-white rounded-full p-1 shadow-md">
-            <img src={logo} alt="KETE" className="h-10 w-10 rounded-full" />
+          <div className="">
+            <img src={logo} alt="KETE" className="h-32 w-32 rounded-full" />
           </div>
 
           <nav>
-            <ul className="flex space-x-6">
-              <li className="relative">
-              <a
-                  href="/"
-                  className="text-white font-medium hover:text-gray-100 transition"
-                >
-                  Accueil
-                </a>
-                
+            <ul className="flex space-x-6 relative">
+              <li>
+                <a href="/" className="text-white font-medium hover:text-gray-100 transition">Accueil</a>
               </li>
-              <li className="relative">
-                <a
-                  href="#"
-                  className="text-white font-medium hover:text-gray-100 transition"
-                  onClick={() => toggleMenu('articles')}
-                >
-                  Actualités
-                </a>
-                {activeMenu === 'articles' && (
-                  <ul className="absolute left-0 mt-2 bg-white text-black shadow-md rounded-lg w-48">
-                    <li><a href="#" className="block px-4 py-2 hover:bg-gray-200">Sous-élément 1</a></li>
-                    <li><a href="#" className="block px-4 py-2 hover:bg-gray-200">Sous-élément 2</a></li>
-                    <li><a href="#" className="block px-4 py-2 hover:bg-gray-200">Sous-élément 3</a></li>
-                  </ul>
-                )}
+
+              <li>
+                <a href="/admin/register" className="text-white font-medium hover:text-gray-100 transition">S'authentifier</a>
               </li>
 
               <li className="relative">
-                <a
-                  href="#"
-                  className="text-white font-medium hover:text-gray-100 transition"
-                  onClick={() => toggleMenu('actualites')}
+                <button
+                  onClick={toggleMenu}
+                  className="text-white font-medium hover:text-gray-100 transition focus:outline-none"
                 >
-                  Articles
-                </a>
-                {activeMenu === 'actualites' && (
-                  <ul className="absolute left-0 mt-2 bg-white text-black shadow-md rounded-lg w-48">
-                    <li><a href="/article" className="block px-4 py-2 hover:bg-gray-200">Articles d’actualités</a></li>
-                    <li><a href="#" className="block px-4 py-2 hover:bg-gray-200">Reportages</a></li>
-                    <li><a href="#" className="block px-4 py-2 hover:bg-gray-200">Lundi en archives</a></li>
-                    <li><a href="#" className="block px-4 py-2 hover:bg-gray-200">Portraits du mois</a></li>
-                    <li><a href="#" className="block px-4 py-2 hover:bg-gray-200">Pas de planète B</a></li>
-                  </ul>
-                )}
-              </li>
+                  Mon compte
+                </button>
 
-              <li className="relative">
-                <a
-                  href="#"
-                  className="text-white font-medium hover:text-gray-100 transition"
-                  onClick={() => toggleMenu('webradio')}
-                >
-                  Webradio
-                </a>
-                {activeMenu === 'webradio' && (
-                  <ul className="absolute left-0 mt-2 bg-white text-black shadow-md rounded-lg w-48">
-                    <li><a href="#" className="block px-4 py-2 hover:bg-gray-200">Playlists</a></li>
-                  </ul>
-                )}
-              </li>
-
-              <li className="relative">
-                <a
-                  href="#"
-                  className="text-white font-medium hover:text-gray-100 transition"
-                  onClick={() => toggleMenu('memoire')}
-                >
-                  Mémoire du quartier
-                </a>
-                {activeMenu === 'memoire' && (
-                  <ul className="absolute left-0 mt-2 bg-white text-black shadow-md rounded-lg w-48">
-                    <li><a href="#" className="block px-4 py-2 hover:bg-gray-200">Fonds d’archives</a></li>
-                    <li><a href="#" className="block px-4 py-2 hover:bg-gray-200">Actualités passées</a></li>
-                  </ul>
-                )}
-              </li>
-
-              <li className="relative">
-                <a
-                  href="#"
-                  className="text-white font-medium hover:text-gray-100 transition"
-                  onClick={() => toggleMenu('vie')}
-                >
-                  Vie associative
-                </a>
-                {activeMenu === 'vie' && (
-                  <ul className="absolute left-0 mt-2 bg-white text-black shadow-md rounded-lg w-48">
-                    <li className="relative">
-                      <a
-                        href="#"
-                        className="block px-4 py-2 hover:bg-gray-200"
-                        onClick={() => toggleSubMenu('salleSaintBruno')}
-                      >
-                        Salle Saint Bruno
-                      </a>
-                      {activeSubMenu === 'salleSaintBruno' && (
-                        <ul className="absolute left-0 mt-2 bg-white text-black shadow-md rounded-lg w-48">
-                          <li><a href="#" className="block px-4 py-2 hover:bg-gray-200">Description de l’asso</a></li>
-                          <li><a href="#" className="block px-4 py-2 hover:bg-gray-200">FPH</a></li>
-                        </ul>
-                      )}
+                {isOpen && (
+                  <ul className="absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-lg z-20 text-sm">
+                    <li>
+                      <a href="/register" className="block px-4 py-2 hover:bg-gray-100 transition">S'inscrire</a>
                     </li>
-                    <li><a href="#" className="block px-4 py-2 hover:bg-gray-200">Annuaire</a></li>
-                    <li><a href="#" className="block px-4 py-2 hover:bg-gray-200">Carte des assos</a></li>
-                    <li><a href="#" className="block px-4 py-2 hover:bg-gray-200">Offre d’emploi / bénévolat / service civique</a></li>
+                    <li>
+                      <a href="/login" className="block px-4 py-2 hover:bg-gray-100 transition">Se connecter</a>
+                    </li>
+                    <li>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-2 hover:bg-gray-100 transition"
+                      >
+                        Se déconnecter
+                      </button>
+                    </li>
                   </ul>
                 )}
               </li>
-
-              <li className="relative">
-              <a
-                  href="/admin/register"
-                  className="text-white font-medium hover:text-gray-100 transition"
-                >
-                  S'authentifier 
-                </a>
-                
-              </li>
-              <li >
-             
-                  <SearchBar /> 
-              
-                
-              </li>
-
             </ul>
           </nav>
         </div>
       </header>
 
-      {/* Bouton "Retour en haut" */}
       {showTopButton && (
         <button
           onClick={scrollToTop}
@@ -171,7 +103,6 @@ const Home = () => {
           ↑
         </button>
       )}
-       
     </>
   );
 };

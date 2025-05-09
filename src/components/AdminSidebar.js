@@ -29,15 +29,15 @@ const AdminSidebar = ({ onPageChange }) => {
         <ul className="space-y-4">
           <li>
             <button
-              onClick={() => onPageChange('overview')}
+              onClick={() => onPageChange('projects')}
               className="flex w-full items-center text-left hover:bg-indigo-700 p-3 rounded-lg transition"
             >
-              <FaUserCircle className="mr-3" /> Aperçu
+              <FaUserCircle className="mr-3" /> Projets
             </button>
           </li>
           <li>
             <button
-              onClick={() => onPageChange('profile')}
+              onClick={() => onPageChange('header')}
               className="flex w-full items-center text-left hover:bg-indigo-700 p-3 rounded-lg transition"
             >
               <FaUserCircle className="mr-3" /> Gérer le Profil
