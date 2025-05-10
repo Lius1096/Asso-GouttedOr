@@ -156,6 +156,7 @@
 
 import { useState } from "react";
 import { submitProjectIdea } from "../services/apiProjectIdeas";
+import DownloadQuoteButton from "./DownloadQuoteButton";
 
 const ProjectIdeaForm = () => {
   const [formData, setFormData] = useState({
@@ -294,15 +295,8 @@ const ProjectIdeaForm = () => {
           Envoyer
         </button>
 
-        {success && fileName && (
-          <a
-            href={`/quotes/${fileName}`}
-            download
-            className="block mt-4 bg-green-600 text-white text-center py-3 rounded hover:bg-green-700"
-          >
-            Télécharger le devis
-          </a>
-        )}
+        {success && fileName && <DownloadQuoteButton fileName={fileName} />}
+
       </form>
     </section>
   );
